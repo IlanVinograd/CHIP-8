@@ -2,7 +2,7 @@
 CXX := g++
 
 # Compiler Flags
-CXXFLAGS := -Wall -Wextra -pedantic -Werror -std=c++17 -O2
+CXXFLAGS := -Wall -Wextra -pedantic -std=c++17 -O2
 
 # Folder Paths
 INCLUDES := Includes
@@ -27,7 +27,7 @@ all: $(TARGET)
 # Link object files into executable
 $(TARGET): $(OBJ)
 	@echo Linking object files into $(TARGET)...
-	@$(CXX) $(OBJ) -o $(TARGET)
+	$(CXX) $(OBJ) -lgdiplus -mwindows -o $(TARGET)
 
 # Compile .cpp files into .o object files
 $(OBJECTS)/%.o: $(SOURCES)/%.cpp | $(OBJECTS)
