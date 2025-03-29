@@ -37,7 +37,7 @@ $(OBJECTS)/%.o: $(SOURCES)/%.cpp | $(OBJECTS)
 # Create Objects directory if it doesn't exist
 $(OBJECTS):
 	@echo Creating directory $(OBJECTS)...
-	@mkdir -p $(OBJECTS)
+	@mkdir $(OBJECTS)
 
 # Clean up generated files
 clean:
