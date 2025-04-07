@@ -11,7 +11,14 @@ Make sure you have `g++` installed (e.g., via MinGW or MSYS2) and support for Wi
    ```bash
    cd src
 
-2. Build and run the emulator:
+2. Build and run:
+    **To Build and run the emulator**
     ```bash
-    make
-    make clean
+   make
+    ```
+   OR
+    
+   **Cleans up object files and the executable**
+   ```bash        
+   make clean
+   ```
