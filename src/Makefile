@@ -16,7 +16,7 @@ OBJ := $(patsubst $(SOURCES)/%.cpp,$(OBJECTS)/%.o,$(CPP_SOURCES))
 # Include directory
 CXXFLAGS += -I$(INCLUDES)
 
-# Executable output inside Code folder
+# Executable output inside src folder
 TARGET := chip-8.exe
 
 # Default target: build and run
