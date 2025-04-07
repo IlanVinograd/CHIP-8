@@ -83,7 +83,6 @@ bool Display::initWindow(HINSTANCE hInstance, int nCmdShow) {
 
     ShowWindow(hwnd, nCmdShow);
     UpdateWindow(hwnd);
-    hdc = GetDC(hwnd);
     
     return true;
 }

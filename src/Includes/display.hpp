@@ -38,7 +38,6 @@ private:
     Display() {}
 
     HWND hwnd = nullptr;    
-    HDC hdc = nullptr;
     std::array<bool, WIDTH * HEIGHT> screen;
 
     ULONG_PTR gdiplusToken;
