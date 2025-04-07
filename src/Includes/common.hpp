@@ -8,6 +8,9 @@
 #include <iostream>
 #include <array>
 #include <windows.h>
+#include <gdiplus.h>
+
+using namespace Gdiplus;
 
 typedef unsigned char u8;
 typedef unsigned short u16;
