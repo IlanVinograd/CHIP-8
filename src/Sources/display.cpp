@@ -1,7 +1,5 @@
 #include "../Includes/display.hpp"
 
-Display* Display::instance = nullptr;
-
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg)
     {
@@ -12,9 +10,8 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         }
 
     case WM_PAINT:
-        {
-            Display* display = Display::instance;
-            if (!display) break;
+        {   
+            auto& screen = Display::getInstance().getScreen();
 
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
@@ -24,9 +21,14 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             SolidBrush whiteBrush(Color(0, 255, 0));
 
             graphics.FillRectangle(&blackBrush, CORNER_OFFSET, CORNER_OFFSET, WIDTH * PIXEL, HEIGHT * PIXEL);
+            
+            //tests
+            Display::getInstance().setPixel(0, 0);
+            Display::getInstance().setPixel(63, 31);
+            Display::getInstance().togglePixel(20,20);
+            // end tests
 
-            const auto& screen = display->getScreen();
-            for (int i = 0; i < WIDTH * HEIGHT; ++i) {
+            for(int i = 0; i < WIDTH * HEIGHT; ++i) {
                 if (screen[i]) {
                     int x = (i % WIDTH) * PIXEL + CORNER_OFFSET;
                     int y = (i / WIDTH) * PIXEL + CORNER_OFFSET;
@@ -44,7 +46,6 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 bool Display::initWindow(HINSTANCE hInstance, int nCmdShow) {
     GdiplusStartup(&gdiplusToken, &gdiplusStartupInput, nullptr);
-    Display::instance = this;
 
     const wchar_t CLASS_NAME[] = L"Display Window Class";
 
@@ -83,4 +84,19 @@ bool Display::initWindow(HINSTANCE hInstance, int nCmdShow) {
 
 const std::array<bool, WIDTH * HEIGHT>& Display::getScreen() const {
      return screen; 
+}
+
+void Display::setPixel(int x, int y, bool value) {
+    int pos = y * WIDTH + x;
+    screen[pos] = value;
+}
+
+void Display::clear() {
+    screen.fill(false);
+}
+
+bool Display::togglePixel(int x, int y) {
+    int pos = y * WIDTH + x;
+    screen[pos] ^= 1;
+    return !screen[pos];
 }

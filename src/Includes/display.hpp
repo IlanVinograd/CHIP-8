@@ -14,10 +14,19 @@
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 class Display{
 public:
+    Display(const Display&) = delete;
+    Display& operator=(const Display&) = delete;
+
+    static Display& getInstance() {
+		static Display instance;
+		return instance;
+	}
+
     bool initWindow(HINSTANCE hInstance, int nCmdShow);
     const std::array<bool, WIDTH * HEIGHT>& getScreen() const;
-    
-    static Display* instance;
+    void setPixel(int x, int y, bool value = true);
+    bool togglePixel(int x, int y);
+    void clear();
 
     ~Display() {
         if (gdiplusToken != 0) {
@@ -26,6 +35,8 @@ public:
     }
 
 private:
+    Display() {}
+
     HWND hwnd = nullptr;    
     HDC hdc = nullptr;
     std::array<bool, WIDTH * HEIGHT> screen;

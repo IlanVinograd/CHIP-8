@@ -1,7 +1,7 @@
 #include "../Includes/chip8.hpp"
 
 bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow) {
-    if(!display.initWindow(hInstance, nCmdShow)) return false;
+    if (!Display::getInstance().initWindow(hInstance, nCmdShow)) return false;
     //Add all other inits here in the future.
 
     return true;

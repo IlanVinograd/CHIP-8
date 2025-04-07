@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <array>
+#include <algorithm>
 #include <windows.h>
 #include <gdiplus.h>
 

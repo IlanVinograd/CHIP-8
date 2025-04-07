@@ -10,7 +10,7 @@ public:
     void run();
 
 private:
-    Display display;
+
 };
 
 #endif /* _CHIP8_H_ */
