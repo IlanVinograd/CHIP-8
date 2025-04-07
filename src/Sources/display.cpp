@@ -9,36 +9,42 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             return 0;
         }
 
-    case WM_PAINT:
-        {   
-            auto& screen = Display::getInstance().getScreen();
-
+        case WM_PAINT:
+        {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hwnd, &ps);
-
             Graphics graphics(hdc);
+        
+            graphics.Clear(Color(30, 30, 30));
+        
             SolidBrush blackBrush(Color(0, 0, 0));
-            SolidBrush whiteBrush(Color(0, 255, 0));
-
+            SolidBrush greenBrush(Color(0, 255, 0));
+            Pen borderPen(Color(180, 180, 180), 2);
+        
+            graphics.DrawRectangle(&borderPen,
+                CORNER_OFFSET - 2, CORNER_OFFSET - 2,
+                WIDTH * PIXEL + 3, HEIGHT * PIXEL + 3);
+        
             graphics.FillRectangle(&blackBrush, CORNER_OFFSET, CORNER_OFFSET, WIDTH * PIXEL, HEIGHT * PIXEL);
-            
-            //tests
-            Display::getInstance().setPixel(0, 0);
-            Display::getInstance().setPixel(63, 31);
-            Display::getInstance().togglePixel(20,20);
-            // end tests
-
-            for(int i = 0; i < WIDTH * HEIGHT; ++i) {
+        
+            const auto& screen = Display::getInstance().getScreen();
+            for (int i = 0; i < WIDTH * HEIGHT; ++i) {
                 if (screen[i]) {
                     int x = (i % WIDTH) * PIXEL + CORNER_OFFSET;
                     int y = (i / WIDTH) * PIXEL + CORNER_OFFSET;
-                    graphics.FillRectangle(&whiteBrush, x, y, PIXEL, PIXEL);
+                    graphics.FillRectangle(&greenBrush, x, y, PIXEL, PIXEL);
                 }
             }
         
+            FontFamily fontFamily(L"Consolas");
+            Font font(&fontFamily, 14, FontStyleRegular, UnitPixel);
+            SolidBrush textBrush(Color(220, 220, 220));
+            graphics.DrawString(L"CHIP-8 Emulator", -1, &font, PointF(CORNER_OFFSET, CORNER_OFFSET + HEIGHT * PIXEL + 10), &textBrush);
+        
             EndPaint(hwnd, &ps);
+            return 0;
         }
-        return 0;
+        
 
     }
     return DefWindowProc(hwnd, uMsg, wParam, lParam);
