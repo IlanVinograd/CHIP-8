@@ -3,7 +3,6 @@
 A CHIP-8 emulator built in C++ using WinAPI and GDI+.  
 The display is rendered in the top-left corner of the window with a minimalistic, retro-inspired interface.
 
-![image.png](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/image.png)
 
 ## How to Run
 
