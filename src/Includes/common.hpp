@@ -5,6 +5,8 @@
 #define UNICODE
 #endif
 
+#define NOMINMAX
+
 #include <iostream>
 #include <array>
 #include <algorithm>

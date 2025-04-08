@@ -1,7 +1,10 @@
 #include "../Includes/chip8.hpp"
 
-bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow) {
+bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow, const u8 font[FONT_SIZE]) {
+    Display::getInstance().setMemoryPointer(&memory);
+    memory.loadFont(font);
     if (!Display::getInstance().initWindow(hInstance, nCmdShow)) return false;
+
     //Add all other inits here in the future.
 
     return true;

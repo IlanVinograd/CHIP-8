@@ -4,7 +4,7 @@
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int nCmdShow) {
     Chip8 chip8;
     
-    if(!chip8.initChip(hInstance, nCmdShow)) {
+    if(!chip8.initChip(hInstance, nCmdShow, font)) {
         return -1;
     }
 
