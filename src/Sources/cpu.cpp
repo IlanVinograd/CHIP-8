@@ -10,7 +10,7 @@ u8 CPU::getReg(u8 reg) const {
 }
 
 void CPU::push(u8 byte) {
-    SP++
+    SP++;
     stack[SP] =  byte;
 }
 
