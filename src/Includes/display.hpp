@@ -3,6 +3,7 @@
 
 #include "../Includes/common.hpp"
 #include "../Includes/memory.hpp"
+#include "../Includes/display.hpp"
 
 #include <windowsx.h>
 #include <algorithm>
@@ -18,6 +19,22 @@ class Memory;
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 420
 #define CORNER_OFFSET 10
+
+// Input / Scrollbar
+void scrollWheel(WPARAM wParam);
+void BeginScrollbarDrag(HWND hwnd, LPARAM lParam);
+void UpdateScrollbarDrag(HWND hwnd, LPARAM lParam);
+
+// Drawing functions
+void DrawChip8Screen(Graphics& graphics);
+void DrawTitle(Graphics& graphics);
+void DrawMemoryPanel(Graphics& graphics, const Memory* memory);
+void DrawScrollbar(Graphics& graphics);
+void DrawMemoryHeader(Graphics& graphics);
+void Render(Graphics& graphics);
+
+// Double buffering
+void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap);
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 class Display {
