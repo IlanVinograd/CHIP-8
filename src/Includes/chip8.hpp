@@ -4,6 +4,7 @@
 #include "../Includes/common.hpp"
 #include "../Includes/display.hpp"
 #include "../Includes/memory.hpp"
+#include "../Includes/cpu.hpp"
 #include "../Includes/utility.hpp"
 
 class Chip8 {
@@ -13,6 +14,7 @@ public:
 
 private:
     Memory memory;
+    CPU cpu;
 };
 
 #endif /* _CHIP8_H_ */
