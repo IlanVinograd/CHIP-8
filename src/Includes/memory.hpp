@@ -9,6 +9,7 @@
 class Memory {
 public:
     void loadFont(const u8 font[80]);
+    
     const u8* getRawMemory() const {
         return memory;
     }

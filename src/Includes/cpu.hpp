@@ -13,6 +13,7 @@ public:
     void push(u8 byte);
     void pop();
     u8 peek();
+    u8 peek(size_t index) const;
     
     // CPU Methods
     //

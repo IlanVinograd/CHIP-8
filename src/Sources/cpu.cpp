@@ -24,3 +24,8 @@ u8 CPU::peek() {
     if (SP == 0) throw std::underflow_error("Stack underflow");
     return stack[SP - 1];
 }
+
+u8 CPU::peek(size_t index) const {
+    if (index >= SP) throw std::out_of_range("Stack index out of bounds");
+    return stack[index];
+}

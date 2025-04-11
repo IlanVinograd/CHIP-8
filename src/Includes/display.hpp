@@ -3,7 +3,7 @@
 
 #include "../Includes/common.hpp"
 #include "../Includes/memory.hpp"
-#include "../Includes/display.hpp"
+#include "../Includes/cpu.hpp"
 
 #include <windowsx.h>
 #include <algorithm>
@@ -11,6 +11,7 @@
 #include <iomanip>
 
 class Memory;
+class CPU;
 
 #define WIDTH 64
 #define HEIGHT 32
@@ -21,15 +22,22 @@ class Memory;
 #define CORNER_OFFSET 10
 
 // Input / Scrollbar
-void scrollWheel(WPARAM wParam);
-void BeginScrollbarDrag(HWND hwnd, LPARAM lParam);
-void UpdateScrollbarDrag(HWND hwnd, LPARAM lParam);
+void memScrollWheel(WPARAM wParam);
+void stackScrollWheel(WPARAM wParam);
+
+void BeginMemScrollbarDrag(HWND hwnd, LPARAM lParam);
+void BeginStackScrollbarDrag(HWND hwnd, LPARAM lParam);
+
+void UpdateMemScrollbarDrag(HWND hwnd, LPARAM lParam);
+void UpdateStackScrollbarDrag(HWND hwnd, LPARAM lParam);
 
 // Drawing functions
 void DrawChip8Screen(Graphics& graphics);
 void DrawTitle(Graphics& graphics);
 void DrawMemoryPanel(Graphics& graphics, const Memory* memory);
-void DrawScrollbar(Graphics& graphics);
+void DrawStackPanel(Graphics& graphics, const CPU* cpu);
+void DrawMemScrollbar(Graphics& graphics);
+void DrawStackScrollbar(Graphics& graphics);
 void DrawMemoryHeader(Graphics& graphics);
 void Render(Graphics& graphics);
 
@@ -37,19 +45,24 @@ void Render(Graphics& graphics);
 void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap);
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 class Display {
 public:
     Display(const Display&) = delete;
     Display& operator=(const Display&) = delete;
 
     static Display& getInstance() {
-		static Display instance;
-		return instance;
-	}
+            static Display instance;
+            return instance;
+        }
 
     bool initWindow(HINSTANCE hInstance, int nCmdShow);
+
     void setMemoryPointer(Memory* mem);
     Memory* getMemory() const { return memory; }
+
+    void setCPUPointer(CPU* cpu);
+    CPU* getCpu() const { return cpu; }
 
     const std::array<bool, WIDTH * HEIGHT>& getScreen() const;
     void setPixel(int x, int y, bool value = true);
@@ -66,6 +79,8 @@ private:
     Display() {}
 
     Memory* memory = nullptr;
+    CPU* cpu = nullptr;
+
     HWND hwnd = nullptr;
     std::array<bool, WIDTH * HEIGHT> screen;
 
