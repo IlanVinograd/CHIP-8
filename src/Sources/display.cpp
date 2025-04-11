@@ -390,7 +390,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     {
         if (GetKeyState(VK_CONTROL) & 0x8000)
             stackScrollWheel(wParam);
-                  
+
         else 
             memScrollWheel(wParam);
         
