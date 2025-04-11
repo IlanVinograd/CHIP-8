@@ -28,6 +28,12 @@ const int cpuViewY = CORNER_OFFSET + 36;
 const int cpuViewWidth = 76;
 const int cpuViewHeight = WINDOW_HEIGHT - 13.5 * CORNER_OFFSET;
 
+/* Registers */
+const int regViewX = WIDTH * PIXEL + 265;
+const int regViewY = CORNER_OFFSET + 36;
+const int regViewWidth = 180;
+const int regViewHeight = (WINDOW_HEIGHT - 13.5 * CORNER_OFFSET) / 2 - 10;
+
 void memScrollWheel(WPARAM wParam) {
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
     int scrollAmount = delta > 0 ? -lineHeight : lineHeight;
@@ -162,7 +168,7 @@ void DrawMemoryPanel(Graphics& graphics, const Memory* memory) {
     const int memStartY = memoryViewY + 10;
     const int maxLines = memoryViewHeight / lineHeight;
 
-    for (int i = 0; i < maxLines; ++i) {
+    for (int i = 0; i < maxLines; i++) {
         int memIndex = (memScrollPos / lineHeight) + i;
         if (memIndex * 4 >= 4096) break;
 
@@ -193,7 +199,7 @@ void DrawStackPanel(Graphics& graphics, const CPU* cpu) {
     const int stackStartY = cpuViewY + 10;
     const int maxLines = cpuViewHeight / lineHeight;
     
-    for (int i = 0; i < maxLines; ++i) {
+    for (int i = 0; i < maxLines; i++) {
         int stackIndex = (stackScrollPos / lineHeight) + i;
         if (stackIndex >= 64) break;
 
@@ -209,6 +215,46 @@ void DrawStackPanel(Graphics& graphics, const CPU* cpu) {
 
         graphics.DrawString(wss.str().c_str(), -1, &monoFont,
             PointF(stackStartX, static_cast<REAL>(stackStartY + i * lineHeight)), &cpuBrush);
+    }
+}
+
+void DrawRegPanel(Graphics& graphics, const CPU* cpu) {
+    if(!cpu) return;
+
+    FontFamily fontFamily(L"Consolas");
+    Font monoFont(&fontFamily, 16, FontStyleRegular, UnitPixel);
+    SolidBrush cpuBrush(Color(200, 200, 200));
+    Pen cpuBorderPen(Color(120, 120, 120), 1);
+    SolidBrush cpuBgBrush(Color(20, 20, 20));
+
+    graphics.FillRectangle(&cpuBgBrush, regViewX, regViewY, regViewWidth, regViewHeight);
+    graphics.DrawRectangle(&cpuBorderPen, regViewX, regViewY, regViewWidth, regViewHeight);
+
+    const int regStartX = regViewX + 10;
+    const int regStartY = regViewY - 8;
+    const int maxLines = regViewHeight / lineHeight;
+    
+    auto formatReg = [&](int index) -> std::wstring {
+        std::wstringstream ss;
+        ss << L"  V" << std::hex << std::uppercase << index << L": ";
+
+        try {
+            ss << std::setfill(L'0') << (int)cpu->getReg(index);
+        } catch (...) {
+            ss << L"--";
+        }
+        return ss.str();
+    };
+
+    for (int i = 0; i < maxLines; i++) {
+        int regIndex = i;
+        if (regIndex >= 8) break;
+
+        std::wstringstream wss;
+        wss << formatReg(regIndex) << L" " << formatReg(regIndex+8);
+
+        graphics.DrawString(wss.str().c_str(), -1, &monoFont,
+            PointF(regStartX, static_cast<REAL>(regStartY + i * lineHeight) + 8.5), &cpuBrush);
     }
 }
 
@@ -260,7 +306,7 @@ void DrawHeaders(Graphics& graphics) {
     FontFamily fontFamily(L"Consolas");
     Font font(&fontFamily, 14, FontStyleRegular, UnitPixel);
     SolidBrush headerBrush(Color(255, 200, 50));
-    graphics.DrawString(L"MEMORY           STACK", -1, &font, PointF(memoryViewX, memoryViewY - 24), &headerBrush);
+    graphics.DrawString(L"     MEMORY        STACK           REGISTERS", -1, &font, PointF(memoryViewX, memoryViewY - 24), &headerBrush);
 }
 
 void Render(Graphics& graphics) {
@@ -268,6 +314,7 @@ void Render(Graphics& graphics) {
     DrawTitle(graphics);
     DrawMemoryPanel(graphics, Display::getInstance().getMemory());
     DrawStackPanel(graphics, Display::getInstance().getCpu());
+    DrawRegPanel(graphics, Display::getInstance().getCpu());
     DrawMemScrollbar(graphics);
     DrawStackScrollbar(graphics);
     DrawHeaders(graphics);

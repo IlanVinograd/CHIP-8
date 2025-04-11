@@ -36,6 +36,7 @@ void DrawChip8Screen(Graphics& graphics);
 void DrawTitle(Graphics& graphics);
 void DrawMemoryPanel(Graphics& graphics, const Memory* memory);
 void DrawStackPanel(Graphics& graphics, const CPU* cpu);
+void DrawRegPanel(Graphics& graphics, const CPU* cpu);
 void DrawMemScrollbar(Graphics& graphics);
 void DrawStackScrollbar(Graphics& graphics);
 void DrawHeaders(Graphics& graphics);
