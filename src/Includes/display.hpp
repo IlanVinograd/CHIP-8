@@ -38,7 +38,7 @@ void DrawMemoryPanel(Graphics& graphics, const Memory* memory);
 void DrawStackPanel(Graphics& graphics, const CPU* cpu);
 void DrawMemScrollbar(Graphics& graphics);
 void DrawStackScrollbar(Graphics& graphics);
-void DrawMemoryHeader(Graphics& graphics);
+void DrawHeaders(Graphics& graphics);
 void Render(Graphics& graphics);
 
 // Double buffering

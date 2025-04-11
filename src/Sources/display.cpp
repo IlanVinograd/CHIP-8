@@ -232,11 +232,11 @@ void DrawStackScrollbar(Graphics& graphics) {
     graphics.FillRectangle(&scrollbarThumb, scrollbarX, scrollbarY, stackScrollbarWidth, scrollbarHeight);
 }
 
-void DrawMemoryHeader(Graphics& graphics) {
+void DrawHeaders(Graphics& graphics) {
     FontFamily fontFamily(L"Consolas");
     Font font(&fontFamily, 14, FontStyleRegular, UnitPixel);
     SolidBrush headerBrush(Color(255, 200, 50));
-    graphics.DrawString(L"MEMORY", -1, &font, PointF(memoryViewX, memoryViewY - 24), &headerBrush);
+    graphics.DrawString(L"MEMORY           STACK", -1, &font, PointF(memoryViewX, memoryViewY - 24), &headerBrush);
 }
 
 void Render(Graphics& graphics) {
@@ -246,7 +246,7 @@ void Render(Graphics& graphics) {
     DrawStackPanel(graphics, Display::getInstance().getCpu());
     DrawMemScrollbar(graphics);
     DrawStackScrollbar(graphics);
-    DrawMemoryHeader(graphics);
+    DrawHeaders(graphics);
 }
 
 void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap) {
