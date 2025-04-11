@@ -2,6 +2,7 @@
 
 const int lineHeight = 16;
 
+/* Memory */
 const int memoryViewX = WIDTH * PIXEL + 40;
 const int memoryViewY = CORNER_OFFSET + 36;
 const int memoryViewWidth = 132;
@@ -14,6 +15,7 @@ int memScrollStartPos = 0;
 
 const int memScrollbarWidth = 6;
 
+/* Stack */
 int stackScrollPos = 0;
 bool isDraggingStackScrollbar = false;
 int stackDragStartY = 0;
@@ -23,7 +25,7 @@ const int stackScrollbarWidth = 6;
 
 const int cpuViewX = WIDTH * PIXEL + 180;
 const int cpuViewY = CORNER_OFFSET + 36;
-const int cpuViewWidth = 40;
+const int cpuViewWidth = 76;
 const int cpuViewHeight = WINDOW_HEIGHT - 13.5 * CORNER_OFFSET;
 
 void memScrollWheel(WPARAM wParam) {
@@ -186,6 +188,28 @@ void DrawStackPanel(Graphics& graphics, const CPU* cpu) {
 
     graphics.FillRectangle(&cpuBgBrush, cpuViewX, cpuViewY, cpuViewWidth, cpuViewHeight);
     graphics.DrawRectangle(&cpuBorderPen, cpuViewX, cpuViewY, cpuViewWidth, cpuViewHeight);
+
+    const int stackStartX = cpuViewX + 10;
+    const int stackStartY = cpuViewY + 10;
+    const int maxLines = cpuViewHeight / lineHeight;
+    
+    for (int i = 0; i < maxLines; ++i) {
+        int stackIndex = (stackScrollPos / lineHeight) + i;
+        if (stackIndex >= 64) break;
+
+        std::wstringstream wss;
+        wss << L"#" << std::setw(2) << std::setfill(L'0') << stackIndex << L": ";
+
+        try {
+            wss << std::hex << std::uppercase
+                << std::setw(2) << std::setfill(L'0') << (int)cpu->peek(stackIndex);
+        } catch (...) {
+            wss << L"--";
+        }
+
+        graphics.DrawString(wss.str().c_str(), -1, &monoFont,
+            PointF(stackStartX, static_cast<REAL>(stackStartY + i * lineHeight)), &cpuBrush);
+    }
 }
 
 void DrawMemScrollbar(Graphics& graphics) {
