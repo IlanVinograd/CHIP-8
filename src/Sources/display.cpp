@@ -225,7 +225,7 @@ void DrawStackPanel(Graphics& graphics, const CPU* cpu) {
 }
 
 void DrawRegPanel(Graphics& graphics, const CPU* cpu) {
-    if(!cpu) return;
+    if (!cpu) return;
 
     FontFamily fontFamily(L"Consolas");
     Font monoFont(&fontFamily, 16, FontStyleRegular, UnitPixel);
@@ -238,29 +238,31 @@ void DrawRegPanel(Graphics& graphics, const CPU* cpu) {
 
     const int regStartX = regViewX + 10;
     const int regStartY = regViewY - 8;
-    const int maxLines = regViewHeight / lineHeight;
-    
-    auto formatReg = [&](int index) -> std::wstring {
-        std::wstringstream ss;
-        ss << L"  V" << std::hex << std::uppercase << index << L": ";
+    const int lineSpacing = 15.5f;
+    const int columnOffset = 90;
 
+    for (int i = 0; i < 8; ++i) {
+        std::wstringstream leftWss, rightWss;
+
+        leftWss << L"V" << std::hex << std::uppercase << i << L": ";
         try {
-            ss << std::setfill(L'0') << (int)cpu->getReg(index);
+            leftWss << std::setw(2) << std::setfill(L'0') << (int)cpu->getReg(i);
         } catch (...) {
-            ss << L"--";
+            leftWss << L"--";
         }
-        return ss.str();
-    };
 
-    for (int i = 0; i < maxLines; i++) {
-        int regIndex = i;
-        if (regIndex >= 8) break;
+        rightWss << L"V" << std::hex << std::uppercase << (i + 8) << L": ";
+        try {
+            rightWss << std::setw(2) << std::setfill(L'0') << (int)cpu->getReg(i + 8);
+        } catch (...) {
+            rightWss << L"--";
+        }
 
-        std::wstringstream wss;
-        wss << formatReg(regIndex) << L" " << formatReg(regIndex+8);
+        graphics.DrawString(leftWss.str().c_str(), -1, &monoFont,
+            PointF(regStartX, static_cast<REAL>(regStartY + i * lineHeight) + lineSpacing), &cpuBrush);
 
-        graphics.DrawString(wss.str().c_str(), -1, &monoFont,
-            PointF(regStartX, static_cast<REAL>(regStartY + i * lineHeight) + 15.5), &cpuBrush);
+        graphics.DrawString(rightWss.str().c_str(), -1, &monoFont,
+            PointF(regStartX + columnOffset, static_cast<REAL>(regStartY + i * lineHeight) + lineSpacing), &cpuBrush);
     }
 }
 
@@ -299,7 +301,7 @@ void DrawSpecialRegPanel(Graphics& graphics, const CPU* cpu){
 
     drawString(L"PC", &CPU::getPC, 0, 1);
     drawString(L"SP", &CPU::getSP, 1, 1);
-    drawString(L"I", &CPU::getI, 2, 1);
+    drawString(L"I", &CPU::getI, 2, 10);
     drawString(L"DT", &CPU::getDT, 0, 95);
     drawString(L"SC", &CPU::getST, 1, 95);
 }
@@ -388,9 +390,10 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     {
         if (GetKeyState(VK_CONTROL) & 0x8000)
             stackScrollWheel(wParam);
-        else
+                  
+        else 
             memScrollWheel(wParam);
-
+        
         InvalidateRect(hwnd, NULL, TRUE);
         return 0;
     }
