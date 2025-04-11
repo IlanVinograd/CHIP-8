@@ -32,7 +32,13 @@ const int cpuViewHeight = WINDOW_HEIGHT - 13.5 * CORNER_OFFSET;
 const int regViewX = WIDTH * PIXEL + 265;
 const int regViewY = CORNER_OFFSET + 36;
 const int regViewWidth = 180;
-const int regViewHeight = (WINDOW_HEIGHT - 13.5 * CORNER_OFFSET) / 2 - 10;
+const int regViewHeight = (WINDOW_HEIGHT - 13.5 * CORNER_OFFSET) / 2 + 4;
+
+/* Special Registers*/
+const int sRegViewX = WIDTH * PIXEL + 265;
+const int sRegViewY = CORNER_OFFSET + 188;
+const int sRegViewWidth = 180;
+const int sRegViewHeight = (WINDOW_HEIGHT - 13.5 * CORNER_OFFSET) / 2 - 75;
 
 void memScrollWheel(WPARAM wParam) {
     int delta = GET_WHEEL_DELTA_WPARAM(wParam);
@@ -254,8 +260,48 @@ void DrawRegPanel(Graphics& graphics, const CPU* cpu) {
         wss << formatReg(regIndex) << L" " << formatReg(regIndex+8);
 
         graphics.DrawString(wss.str().c_str(), -1, &monoFont,
-            PointF(regStartX, static_cast<REAL>(regStartY + i * lineHeight) + 8.5), &cpuBrush);
+            PointF(regStartX, static_cast<REAL>(regStartY + i * lineHeight) + 15.5), &cpuBrush);
     }
+}
+
+void DrawSpecialRegPanel(Graphics& graphics, const CPU* cpu){
+    if(!cpu) return;
+
+    FontFamily fontFamily(L"Consolas");
+    Font monoFont(&fontFamily, 16, FontStyleRegular, UnitPixel);
+    SolidBrush cpuBrush(Color(200, 200, 200));
+    Pen cpuBorderPen(Color(120, 120, 120), 1);
+    SolidBrush cpuBgBrush(Color(20, 20, 20));
+
+    graphics.FillRectangle(&cpuBgBrush, sRegViewX, sRegViewY, sRegViewWidth, sRegViewHeight);
+    graphics.DrawRectangle(&cpuBorderPen, sRegViewX, sRegViewY, sRegViewWidth, sRegViewHeight);
+
+    const int sRegStartX = sRegViewX + 10;
+    const int sRegStartY = sRegViewY - 8;
+
+    auto drawString = [&](const std::wstring& reg, auto getter, int Y, int X) {
+        std::wstringstream wss;
+
+        using RetType = decltype((cpu->*getter)());
+        int width = sizeof(RetType) * 2;
+
+        wss << reg << L": ";
+        try {
+            wss << std::setw(width) << std::setfill(L'0') << std::hex << std::uppercase
+                << static_cast<int>((cpu->*getter)());
+        } catch (...) {
+            wss << L"--";
+        }
+
+        graphics.DrawString(wss.str().c_str(), -1, &monoFont,
+            PointF(sRegStartX + X, static_cast<REAL>(sRegStartY + Y * lineHeight) + 15.5f), &cpuBrush);
+    };
+
+    drawString(L"PC", &CPU::getPC, 0, 1);
+    drawString(L"SP", &CPU::getSP, 1, 1);
+    drawString(L"I", &CPU::getI, 2, 1);
+    drawString(L"DT", &CPU::getDT, 0, 95);
+    drawString(L"SC", &CPU::getST, 1, 95);
 }
 
 void DrawMemScrollbar(Graphics& graphics) {
@@ -315,6 +361,7 @@ void Render(Graphics& graphics) {
     DrawMemoryPanel(graphics, Display::getInstance().getMemory());
     DrawStackPanel(graphics, Display::getInstance().getCpu());
     DrawRegPanel(graphics, Display::getInstance().getCpu());
+    DrawSpecialRegPanel(graphics, Display::getInstance().getCpu());
     DrawMemScrollbar(graphics);
     DrawStackScrollbar(graphics);
     DrawHeaders(graphics);

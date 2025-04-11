@@ -16,14 +16,19 @@ public:
     u8 peek(size_t index) const;
     
     // CPU Methods
-    //
+    u16 getI() const { return I; };
+    u16 getPC() const { return PC; };
+
+    u8 getSP() const { return SP; };
+    u8 getST() const { return ST; };
+    u8 getDT() const { return DT; };
 
 private:
     u16 I  = 0x0;    // Is 16 bit but we use only 12 bit | 0000 [ 1111 1111 1111 ] |
     u16 PC = 0x200;
 
     u8 stack[64] = { };
-    u8 SP  = 0;
+    u8 SP  = 0x0;
 
     u8 V[16] = { };
     u8 DT  = 0x0;
