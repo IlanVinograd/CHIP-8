@@ -53,7 +53,7 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
     wchar_t* lastSlash = wcsrchr(path, L'\\');
     if (lastSlash) {
         *(lastSlash + 1) = L'\0';
-        wcscat_s(path, L"beep2.wav");
+        wcscat_s(path, L"beep.wav");
     }
 
     while (running) {
