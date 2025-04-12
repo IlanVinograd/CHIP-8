@@ -27,7 +27,7 @@ all: $(TARGET)
 # Link object files into executable
 $(TARGET): $(OBJ)
 	@echo Linking object files into $(TARGET)...
-	$(CXX) $(OBJ) -lgdiplus -mwindows -o $(TARGET)
+	$(CXX) $(OBJ) -lgdiplus -lwinmm -mwindows -o $(TARGET)
 
 # Compile .cpp files into .o object files
 $(OBJECTS)/%.o: $(SOURCES)/%.cpp | $(OBJECTS)

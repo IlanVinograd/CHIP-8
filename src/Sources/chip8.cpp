@@ -3,11 +3,12 @@
 bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow, const u8 font[FONT_SIZE]) {
     Display::getInstance().setMemoryPointer(&memory);
     Display::getInstance().setCPUPointer(&cpu);
+
     memory.loadFont(font);
     
     if (!Display::getInstance().initWindow(hInstance, nCmdShow)) return false;
 
-    //Add all other inits here in the future.
+    // Add all other inits here in the future.
 
     return true;
 }
@@ -15,11 +16,12 @@ bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow, const u8 font[FONT_SIZE]
 void Chip8::run() {
     MSG msg = {};
 
-    bool running = true;
-    while (running) {
+    std::thread timerThread(&CPU::chip8TimerLoop, &cpu, Display::getInstance().getHwnd());
+
+    while (true) {
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT) {
-                running = false;
+                ::running = false;
                 break;
             }
 
@@ -27,6 +29,8 @@ void Chip8::run() {
             DispatchMessage(&msg);
         }
 
-        if (!running) break;
+        if (!::running) break;
     }
+    
+    timerThread.join();
 }

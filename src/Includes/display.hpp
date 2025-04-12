@@ -77,6 +77,8 @@ public:
         }
     }
 
+    HWND getHwnd() { return hwnd; };
+    
 private:
     Display() {}
 

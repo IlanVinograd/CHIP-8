@@ -303,7 +303,7 @@ void DrawSpecialRegPanel(Graphics& graphics, const CPU* cpu){
     drawString(L"SP", &CPU::getSP, 1, 1);
     drawString(L"I", &CPU::getI, 2, 10);
     drawString(L"DT", &CPU::getDT, 0, 95);
-    drawString(L"SC", &CPU::getST, 1, 95);
+    drawString(L"ST", &CPU::getST, 1, 95);
 }
 
 void DrawMemScrollbar(Graphics& graphics) {
@@ -391,9 +391,9 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         if (GetKeyState(VK_CONTROL) & 0x8000)
             stackScrollWheel(wParam);
 
-        else 
+        else
             memScrollWheel(wParam);
-        
+
         InvalidateRect(hwnd, NULL, TRUE);
         return 0;
     }

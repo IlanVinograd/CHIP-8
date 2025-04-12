@@ -10,6 +10,7 @@
 #include <iostream>
 #include <array>
 #include <algorithm>
+#include <thread>
 #include <stdexcept>
 #include <windows.h>
 #include <gdiplus.h>
