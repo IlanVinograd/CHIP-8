@@ -7,7 +7,7 @@ The display is rendered in the top-left corner of the window with a minimalistic
 
 ## How to Run
 
-Make sure you have `g++` installed (e.g., via MinGW or MSYS2) and support for WinAPI and GDI+.
+Make sure you have `g++` installed (e.g., via MinGW or MSYS2), Compiler support for C++17 and support for WinAPI and GDI+ .
 
 1. Open a terminal and navigate to the `src` directory:
    ```bash
