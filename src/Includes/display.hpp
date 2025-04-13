@@ -46,6 +46,8 @@ void Render(Graphics& graphics);
 // Double buffering
 void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap);
 
+void procKey(WPARAM wParam);
+
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 class Display {

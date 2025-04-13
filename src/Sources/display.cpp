@@ -379,6 +379,78 @@ void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, 
     EndPaint(WindowFromDC(hdc), &ps);
 }
 
+void procKey(WPARAM wParam) {
+    switch(wParam) 
+        {
+            case '1':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case '2':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case '3':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case '4':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'Q':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'W':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'E':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'R':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'A':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'S':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'D':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'F':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'Z':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+                
+            case 'X':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'C':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            case 'V':
+                Display::getInstance().getCpu()->setST(15);
+                break;
+
+            default:
+                break;
+        }
+}
+
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg)
     {
@@ -416,6 +488,12 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         UpdateMemScrollbarDrag(hwnd, lParam);
         UpdateStackScrollbarDrag(hwnd, lParam);
         return 0;
+    }
+
+    case WM_KEYDOWN:
+    {
+        procKey(wParam);
+        break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
     }
 
     case WM_PAINT:
