@@ -74,7 +74,7 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
             InvalidateRect(hwnd, NULL, TRUE);
         }
 
-        if(elapsedExe.count() >= 0) {
+        if(elapsedExe.count() >= CPU_MS) {
             lastTickExe = now;
 
             // Fetch, Decode, Execute methids.
@@ -83,6 +83,6 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
             InvalidateRect(hwnd, NULL, TRUE);
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::microseconds(1));
     }
 }
