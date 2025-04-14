@@ -7,7 +7,7 @@
 #include <atomic>
 
 #define SCREEN_MS 17
-#define CPU_MS 3
+#define CPU_MS 2
 
 using steady_clock_t = std::chrono::steady_clock;
 
