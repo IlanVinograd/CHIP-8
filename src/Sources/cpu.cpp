@@ -45,7 +45,8 @@ void CPU::beep(CPU* cpu, const wchar_t* path) {
 }
 
 void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
-    steady_clock_t::time_point lastTick = steady_clock_t::now();
+    steady_clock_t::time_point lastTickTimer = steady_clock_t::now();
+    steady_clock_t::time_point lastTickExe = steady_clock_t::now();
 
     wchar_t path[MAX_PATH];
     GetModuleFileName(NULL, path, MAX_PATH);
@@ -58,14 +59,26 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
 
     while (running) {
         auto now = steady_clock_t::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTick);
 
-        if (elapsed.count() >= 17) {
-            lastTick = now;
+        auto elapsedTimer = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTickTimer);
+        auto elapsedExe = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTickExe);
+        
+
+        if (elapsedTimer.count() >= SCREEN_MS) {
+            lastTickTimer = now;
             cpu->decDT();
             cpu->decST();
 
             cpu->beep(cpu, path);
+
+            InvalidateRect(hwnd, NULL, TRUE);
+        }
+
+        if(elapsedExe.count() >= 0) {
+            lastTickExe = now;
+
+            // Fetch, Decode, Execute methids.
+            cpu->PC++;
 
             InvalidateRect(hwnd, NULL, TRUE);
         }

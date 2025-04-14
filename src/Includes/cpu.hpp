@@ -6,6 +6,9 @@
 #include <chrono>
 #include <atomic>
 
+#define SCREEN_MS 17
+#define CPU_MS 3
+
 using steady_clock_t = std::chrono::steady_clock;
 
 extern std::atomic<bool> running;
