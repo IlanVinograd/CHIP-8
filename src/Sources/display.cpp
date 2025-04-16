@@ -383,67 +383,67 @@ void procKey(WPARAM wParam) {
     switch(wParam) 
         {
             case '1':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case '2':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case '3':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case '4':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'Q':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'W':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'E':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'R':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'A':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'S':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'D':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'F':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'Z':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
                 
             case 'X':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'C':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             case 'V':
-                Display::getInstance().getCpu()->setST(15);
+                Display::getInstance().getCpu()->setST(35);
                 break;
 
             default:

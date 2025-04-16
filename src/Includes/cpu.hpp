@@ -1,6 +1,8 @@
 #ifndef _CPU_H_
 #define _CPU_H_
 
+#include "../Includes/memory.hpp"
+#include "../Includes/display.hpp"
 #include "../Includes/common.hpp"
 
 #include <chrono>
@@ -40,6 +42,9 @@ public:
     void beep(CPU* cpu, const wchar_t* path);
     static void chip8TimerLoop(CPU* cpu, HWND hwnd);
     void stop() { running = false; }
+
+    u16 fetch();
+    void FetchDecodeExecute();
 
 private:
     u16 I  = 0x0;    // Is 16 bit but we use only 12 bit | 0000 [ 1111 1111 1111 ] |

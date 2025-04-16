@@ -77,12 +77,25 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
         if(elapsedExe.count() >= CPU_MS) {
             lastTickExe = now;
 
-            // Fetch, Decode, Execute methids.
-            cpu->PC++;
+            cpu->FetchDecodeExecute();
 
             InvalidateRect(hwnd, NULL, TRUE);
         }
 
         std::this_thread::sleep_for(std::chrono::microseconds(1));
     }
+}
+
+u16 CPU::fetch() {
+    u8 high = Display::getInstance().getMemory()->read(PC);
+    u8 low = Display::getInstance().getMemory()->read(PC+1);
+
+    u16 opcode = (high << 8) | low;
+    PC += 2;
+
+    return opcode;
+}
+
+void CPU::FetchDecodeExecute() {
+    u16 opcode = fetch();
 }
