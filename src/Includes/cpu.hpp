@@ -44,6 +44,7 @@ public:
     void stop() { running = false; }
 
     u16 fetch();
+    void decodeAndExecute(u16 &opcode);
     void FetchDecodeExecute();
 
 private:

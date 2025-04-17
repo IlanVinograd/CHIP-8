@@ -96,6 +96,99 @@ u16 CPU::fetch() {
     return opcode;
 }
 
+void CPU::decodeAndExecute(u16 &opcode) {
+    u8 op = (opcode & 0xF000) << 12, x = (opcode & 0x0F00) << 8,
+    y = (opcode & 0x00F0) << 4, n = (opcode & 0x000F),
+    nn = (opcode & 0x00FF), nnn = (opcode & 0x0FFF);
+
+    switch (op) {
+
+        case 0x0:
+            if (x == 0x0) {
+                switch(nn) {
+                    case 0xE0: 
+                        Display::getInstance().clear();
+                        break;
+
+                    case 0xEE:
+                        // return subroutine.
+                        break;
+
+                    default:
+                        throw "ERROR Unrecognized Opcode On: 0x00EE / 0x00E0 ";
+                        break;
+                }
+            } else {
+                throw "ERROR Unrecognized Opcode On: 0x0X00 <- Should be 0";
+            }
+            break;
+
+        case 0x1:
+
+            break;
+
+        case 0x2:
+
+            break;
+
+        case 0x3:
+
+            break;
+
+        case 0x4:
+
+            break;
+
+        case 0x5:
+
+            break;
+
+        case 0x6:
+
+            break;
+
+        case 0x7:
+
+            break;
+
+        case 0x8:
+
+            break;
+
+        case 0x9:
+
+            break;
+
+        case 0xA:
+
+            break;
+
+        case 0xB:
+
+            break;
+
+        case 0xC:
+
+            break;
+
+        case 0xD:
+
+            break;
+
+        case 0xE:
+
+            break;
+
+        case 0xF:
+
+            break;
+
+        default: 
+            return;
+    }
+}
+
 void CPU::FetchDecodeExecute() {
     u16 opcode = fetch();
+    //decodeAndExecute(opcode);
 }
