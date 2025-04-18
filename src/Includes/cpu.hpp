@@ -49,6 +49,11 @@ public:
     void decodeAndExecute(u16 &opcode);
     void FetchDecodeExecute();
 
+    void pause() { paused = true; }
+    void resume() { paused = false; }
+    void reset();
+    bool isPaused() const { return paused; }
+
 private:
     u16 I  = 0x0;    // Is 16 bit but we use only 12 bit | 0000 [ 1111 1111 1111 ] |
     u16 PC = 0x200;
@@ -64,6 +69,8 @@ private:
 
     void decST() {if(ST > 0) ST--; };
     void decDT() { if(DT > 0) DT--; };
+
+    bool paused = true;
 };
 
 #endif /* _CPU_H_ */

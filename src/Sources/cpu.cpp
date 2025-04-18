@@ -82,7 +82,7 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
         if(elapsedExe.count() >= CPU_MS) {
             lastTickExe = now;
 
-            cpu->FetchDecodeExecute();
+            if (!cpu->isPaused()) cpu->FetchDecodeExecute();
 
             InvalidateRect(hwnd, NULL, TRUE);
         }
@@ -196,4 +196,19 @@ void CPU::decodeAndExecute(u16 &opcode) {
 void CPU::FetchDecodeExecute() {
     u16 opcode = fetch();
     //decodeAndExecute(opcode);
+}
+
+void CPU::reset() {
+    I = 0;
+    PC = 0x200;
+
+    SP = 0;
+    std::fill(std::begin(stack), std::end(stack), 0);
+
+    std::fill(std::begin(V), std::end(V), 0);
+
+    DT = 0;
+    ST = 0;
+
+    lastTick = steady_clock_t::now();
 }

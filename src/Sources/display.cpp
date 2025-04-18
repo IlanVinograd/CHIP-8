@@ -591,21 +591,30 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     {
         switch (LOWORD(wParam)){
             case IDC_START:
-                // logic
-                MessageBox(hwnd, L"CLICK", L"CLICKED", MB_OK);
-            
+
+                Display::getInstance().getCpu()->resume();
+
+                EnableWindow(Display::getInstance().getStartButton(), false);
+                EnableWindow(Display::getInstance().getPauseButton(), true);
                 break;
 
             case IDC_PAUSE:
-                // logic
+                
+                Display::getInstance().getCpu()->pause();
+                
+                EnableWindow(Display::getInstance().getStartButton(), true);
+                EnableWindow(Display::getInstance().getPauseButton(), false);
                 break;
                 
             case IDC_RESET:
-                // logic
+                
+                Display::getInstance().getCpu()->reset();
+                Display::getInstance().clear();
+
                 break;
 
             case IDC_LOAD:
-                // logic
+                MessageBox(hwnd, L"load game", L"logic for load game", MB_OK);
                 break;
         }
 
