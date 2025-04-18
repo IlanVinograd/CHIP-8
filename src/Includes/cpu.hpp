@@ -31,6 +31,8 @@ public:
     u16 getI() const { return I; };
     u16 getPC() const { return PC; };
 
+    void setPC(u16 pc) { PC = pc; };
+    
     u8 getSP() const { return SP; };
     u8 getST() const { return ST; };
     u8 getDT() const { return DT; };

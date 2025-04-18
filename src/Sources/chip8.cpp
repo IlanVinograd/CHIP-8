@@ -25,7 +25,7 @@ void Chip8::run() {
                 ::running = false;
                 break;
             }
-
+            
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }

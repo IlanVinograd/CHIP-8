@@ -13,13 +13,18 @@
 class Memory;
 class CPU;
 
-#define WIDTH 64
+#define WIDTH  64
 #define HEIGHT 32
-#define PIXEL 10
+#define PIXEL  10
 
-#define WINDOW_WIDTH 1200
+#define WINDOW_WIDTH  1200
 #define WINDOW_HEIGHT 420
 #define CORNER_OFFSET 10
+
+#define IDC_START 1
+#define IDC_PAUSE 2
+#define IDC_RESET 3
+#define IDC_LOAD  4
 
 // Input / Scrollbar
 void memScrollWheel(WPARAM wParam);
@@ -47,6 +52,9 @@ void Render(Graphics& graphics);
 void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap);
 
 void procKey(WPARAM wParam);
+
+void createButtons(HWND hwnd);
+void excludeButtons(HWND hwnd, HDC hdc);
 
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -80,14 +88,23 @@ public:
     }
 
     HWND getHwnd() { return hwnd; };
-    
+    HWND getStartButton() { return startButton; };
+    HWND getPauseButton() { return pauseButton; };
+    HWND getResetButton() { return resetButton; };
+    HWND getLoadButton() { return loadButton; };
+
+    void setStartButton(HWND button) { startButton = button; };
+    void setPauseButton(HWND button) { pauseButton = button; };
+    void setResetButton(HWND button) { resetButton = button; };
+    void setLoadButton(HWND button) { loadButton = button; };
+
 private:
     Display() {}
 
     Memory* memory = nullptr;
     CPU* cpu = nullptr;
 
-    HWND hwnd = nullptr;
+    HWND hwnd = nullptr, startButton = nullptr, pauseButton = nullptr, resetButton = nullptr, loadButton = nullptr;
     std::array<bool, WIDTH * HEIGHT> screen;
 
     ULONG_PTR gdiplusToken;

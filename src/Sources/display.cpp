@@ -451,6 +451,91 @@ void procKey(WPARAM wParam) {
         }
 }
 
+void createButtons(HWND hwnd) {
+    HWND startButton = CreateWindow(
+        L"BUTTON",
+        L"start",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+        WINDOW_WIDTH - 290,
+        WINDOW_HEIGHT - 148,
+        80,
+        30,
+        hwnd,
+        (HMENU)IDC_START,
+        (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
+        NULL
+    );
+
+    HWND pauseButton = CreateWindow(
+        L"BUTTON",
+        L"pause",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON | WS_DISABLED,
+        WINDOW_WIDTH - 200,
+        WINDOW_HEIGHT - 148,
+        80,
+        30,
+        hwnd,
+        (HMENU)IDC_PAUSE,
+        (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
+        NULL
+    );
+
+    HWND resetButton = CreateWindow(
+        L"BUTTON",
+        L"reset",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+        WINDOW_WIDTH - 290,
+        WINDOW_HEIGHT - 113,
+        80,
+        30,
+        hwnd,
+        (HMENU)IDC_RESET,
+        (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
+        NULL
+    );
+
+    HWND loadButton = CreateWindow(
+        L"BUTTON",
+        L"load",
+        WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+        WINDOW_WIDTH - 200,
+        WINDOW_HEIGHT - 113,
+        80,
+        30,
+        hwnd,
+        (HMENU)IDC_LOAD,
+        (HINSTANCE)GetWindowLongPtr(hwnd, GWLP_HINSTANCE),
+        NULL
+    );
+
+    Display::getInstance().setStartButton(startButton);
+    Display::getInstance().setPauseButton(pauseButton);
+    Display::getInstance().setResetButton(resetButton);
+    Display::getInstance().setLoadButton(loadButton);
+}
+
+void excludeButtons(HWND hwnd, HDC hdc) {
+    RECT btnRectStart;
+        GetWindowRect(Display::getInstance().getStartButton(), &btnRectStart);
+        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectStart, 2);
+        ExcludeClipRect(hdc, btnRectStart.left, btnRectStart.top, btnRectStart.right, btnRectStart.bottom);
+
+        RECT btnRectPause;
+        GetWindowRect(Display::getInstance().getPauseButton(), &btnRectPause);
+        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectPause, 2);
+        ExcludeClipRect(hdc, btnRectPause.left, btnRectPause.top, btnRectPause.right, btnRectPause.bottom);
+
+        RECT btnRectReset;
+        GetWindowRect(Display::getInstance().getResetButton(), &btnRectReset);
+        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectReset, 2);
+        ExcludeClipRect(hdc, btnRectReset.left, btnRectReset.top, btnRectReset.right, btnRectReset.bottom);
+
+        RECT btnRectLoad;
+        GetWindowRect(Display::getInstance().getLoadButton(), &btnRectLoad);
+        MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectLoad, 2);
+        ExcludeClipRect(hdc, btnRectLoad.left, btnRectLoad.top, btnRectLoad.right, btnRectLoad.bottom);
+}
+
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg)
     {
@@ -496,6 +581,37 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
     }
 
+    case WM_CREATE:
+    {
+        createButtons(hwnd);
+        return 0;
+    }
+
+    case WM_COMMAND:
+    {
+        switch (LOWORD(wParam)){
+            case IDC_START:
+                // logic
+                MessageBox(hwnd, L"CLICK", L"CLICKED", MB_OK);
+            
+                break;
+
+            case IDC_PAUSE:
+                // logic
+                break;
+                
+            case IDC_RESET:
+                // logic
+                break;
+
+            case IDC_LOAD:
+                // logic
+                break;
+        }
+
+        break;
+    }
+
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -507,8 +623,9 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
         Graphics graphics(memDC);
         graphics.Clear(Color(30, 30, 30));
-
         Render(graphics);
+
+        excludeButtons(hwnd, hdc);
 
         EndDoubleBuffering(hdc, ps, memDC, oldBitmap, memBitmap);
 

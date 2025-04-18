@@ -58,6 +58,11 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
     }
 
     while (running) {
+        if (!IsWindowEnabled(hwnd)) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            continue;
+        }
+
         auto now = steady_clock_t::now();
 
         auto elapsedTimer = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTickTimer);
