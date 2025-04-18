@@ -7,19 +7,31 @@ void Memory::loadFont(const u8 font[FONT_SIZE]) {
 }
 
 void Memory::loadGame(const char* filepath) {
-    std::ifstream file(filepath, std::ios::binary | std::ios::ate);
-    if (!file) {
-        throw std::runtime_error("Failed to open ROM file");
+    HANDLE hFile = CreateFileA(
+        filepath,
+        GENERIC_READ,
+        FILE_SHARE_READ,
+        NULL,
+        OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hFile == INVALID_HANDLE_VALUE) {
+        throw std::runtime_error("Can't open ROM file (WinAPI)");
     }
 
-    std::streamsize size = file.tellg();
-    file.seekg(0, std::ios::beg);
-
-    u16 pc = 0x200;
-    if (size > (4096 - pc)) {
-        throw std::runtime_error("ROM too large to fit in memory");
+    DWORD fileSize = GetFileSize(hFile, NULL);
+    if (fileSize == INVALID_FILE_SIZE || fileSize > (4096 - 0x200)) {
+        CloseHandle(hFile);
+        throw std::runtime_error("ROM too large or invalid size");
     }
 
-    file.read(reinterpret_cast<char*>(&memory[pc]), size);
-    file.close();
+    DWORD bytesRead = 0;
+    BOOL success = ReadFile(hFile, &memory[0x200], fileSize, &bytesRead, NULL);
+    CloseHandle(hFile);
+
+    if (!success || bytesRead != fileSize) {
+        throw std::runtime_error("Failed to read entire ROM file");
+    }
 }

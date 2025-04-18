@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <array>
+#include <string>
 #include <algorithm>
 #include <thread>
 #include <stdexcept>
