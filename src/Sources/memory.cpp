@@ -6,8 +6,8 @@ void Memory::loadFont(const u8 font[FONT_SIZE]) {
     }
 }
 
-void Memory::loadGame(const char* filepath) {
-    HANDLE hFile = CreateFileA(
+void Memory::loadGame(const wchar_t* filepath) {
+    HANDLE hFile = CreateFileW(
         filepath,
         GENERIC_READ,
         FILE_SHARE_READ,

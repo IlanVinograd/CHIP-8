@@ -536,6 +536,27 @@ void excludeButtons(HWND hwnd, HDC hdc) {
         ExcludeClipRect(hdc, btnRectLoad.left, btnRectLoad.top, btnRectLoad.right, btnRectLoad.bottom);
 }
 
+void showOpenFileDialog(HWND hwnd) {
+    OPENFILENAME f = {sizeof(OPENFILENAMEA)};
+    wchar_t buffer[MAX_PATH] = {};
+
+    f.lStructSize = sizeof(f);
+    f.hwndOwner = hwnd;
+    f.lpstrFile = buffer;
+    f.nMaxFile = sizeof(buffer);
+    f.lpstrFilter = L"All Files\0*.*\0CHIP-8 ROMs (*.ch8)\0*.ch8\0";
+    f.nFilterIndex = 1;
+    f.lpstrFileTitle = NULL;
+    f.nMaxFileTitle = 0;
+    f.lpstrInitialDir = NULL;
+    f.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+    if (GetOpenFileName(&f) == TRUE)
+    {
+        Display::getInstance().getMemory()->loadGame(buffer);
+    }
+}
+
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg)
     {
@@ -614,7 +635,7 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 break;
 
             case IDC_LOAD:
-                MessageBox(hwnd, L"load game", L"logic for load game", MB_OK);
+                showOpenFileDialog(hwnd);
                 break;
         }
 

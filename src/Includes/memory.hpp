@@ -11,7 +11,7 @@
 class Memory {
 public:
     void loadFont(const u8 font[80]);
-    void loadGame(const char* filepath);
+    void loadGame(const wchar_t* filepath);
 
     const u8* getRawMemory() const {
         return memory;

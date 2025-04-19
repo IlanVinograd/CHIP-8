@@ -56,6 +56,8 @@ void procKey(WPARAM wParam);
 void createButtons(HWND hwnd);
 void excludeButtons(HWND hwnd, HDC hdc);
 
+void showOpenFileDialog(HWND hwnd);
+
 LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 class Display {
