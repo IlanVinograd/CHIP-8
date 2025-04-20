@@ -14,9 +14,9 @@ u8 CPU::getReg(u8 reg) const {
     return V[reg];
 }
 
-void CPU::push(u8 byte) {
+void CPU::push(u16 addr) {
     if (SP >= 64) throw std::overflow_error("Stack overflow");
-    stack[SP++] = byte;
+    stack[SP++] = addr;
 }
 
 void CPU::pop() {
@@ -24,12 +24,12 @@ void CPU::pop() {
     stack[--SP] = 0;
 }
 
-u8 CPU::peek() {
+u16 CPU::peek() {
     if (SP == 0) throw std::underflow_error("Stack underflow");
     return stack[SP - 1];
 }
 
-u8 CPU::peek(size_t index) const {
+u16 CPU::peek(size_t index) const {
     if (index >= SP) throw std::out_of_range("Stack index out of bounds");
     return stack[index];
 }
@@ -87,13 +87,13 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
             InvalidateRect(hwnd, NULL, TRUE);
         }
 
-        std::this_thread::sleep_for(std::chrono::microseconds(1));
+        std::this_thread::sleep_for(std::chrono::microseconds(100000)); // <---- DONT FORGOT TO CHANGE BACK.
     }
 }
 
 u16 CPU::fetch() {
-    u8 high = Display::getInstance().getMemory()->read(PC);
-    u8 low = Display::getInstance().getMemory()->read(PC+1);
+    u8 high = instance.getMemory()->read(PC);
+    u8 low = instance.getMemory()->read(PC+1);
 
     u16 opcode = (high << 8) | low;
     PC += 2;
@@ -115,12 +115,16 @@ void CPU::decodeAndExecute(u16 &opcode) {
             if (x == 0x0) {
                 switch(nn) {
                     case 0xE0: 
-                        Display::getInstance().clear(); // Clear Screan.
+                        instance.clear(); // Clear Screan.
                         break;
 
-                    case 0xEE:
-                        // return subroutine.
+                    case 0xEE: { // RET Return from a subroutine (00EE instruction).
+                        u16 returnAddress = instance.getCpu()->peek();
+                        instance.getCpu()->pop();
+                        instance.getCpu()->PC = returnAddress;
                         break;
+
+                    }
 
                     default:
                         throw "ERROR Unrecognized Opcode On: 0x00EE / 0x00E0 ";
@@ -132,11 +136,12 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0x1:
-            Display::getInstance().getCpu()->PC = nnn; // Jumping to nnn (PC = nnn).
+            instance.getCpu()->PC = nnn; // Jumping to nnn (PC = nnn).
             break;
 
         case 0x2:
-
+            instance.getCpu()->push(instance.getCpu()->PC);
+            instance.getCpu()->PC = nnn;
             break;
 
         case 0x3:
@@ -152,12 +157,12 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0x6:
-            Display::getInstance().getCpu()->setReg(x, nn); // Set Vx = nn (6xnn instruction).
+            instance.getCpu()->setReg(x, nn); // Set Vx = nn (6xnn instruction).
             break;
 
         case 0x7: {
-            u8 Vx = Display::getInstance().getCpu()->getReg(x);
-            Display::getInstance().getCpu()->setReg(x, Vx + nn); // Adds the value nn to the value of register Vx (7xnn instruction). 
+            u8 Vx = instance.getCpu()->getReg(x);
+            instance.getCpu()->setReg(x, Vx + nn); // Adds the value nn to the value of register Vx (7xnn instruction). 
             break;
         }
 
@@ -170,7 +175,7 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0xA:
-            Display::getInstance().getCpu()->I = nnn; // The value of register I is set to nnn (Annn instruction).
+            instance.getCpu()->I = nnn; // The value of register I is set to nnn (Annn instruction).
             break;
 
         case 0xB:
@@ -183,21 +188,21 @@ void CPU::decodeAndExecute(u16 &opcode) {
 
         case 0xD:   {
 
-            u8 vx = Display::getInstance().getCpu()->getReg(x);
-            u8 vy = Display::getInstance().getCpu()->getReg(y);
+            u8 vx = instance.getCpu()->getReg(x);
+            u8 vy = instance.getCpu()->getReg(y);
             
-            Display::getInstance().getCpu()->setReg(0xF, 0);
+            instance.getCpu()->setReg(0xF, 0);
             
             for (int row = 0; row < n; row++) {
-                u8 spriteByte = Display::getInstance().getMemory()->read(I + row);
+                u8 spriteByte = instance.getMemory()->read(I + row);
                     
                 for (int col = 0; col < 8; col++) {
                     u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
             
                     if (spritePixel) {
-                            bool erased = Display::getInstance().togglePixel((vx + col) % WIDTH, (vy + row) % HEIGHT);
+                            bool erased = instance.togglePixel((vx + col) % WIDTH, (vy + row) % HEIGHT);
                         if (erased)
-                            Display::getInstance().getCpu()->setReg(0xF, 1);
+                            instance.getCpu()->setReg(0xF, 1);
                     }
                 }
             }

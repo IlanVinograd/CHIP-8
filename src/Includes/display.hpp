@@ -13,6 +13,8 @@
 class Memory;
 class CPU;
 
+#define instance Display::getInstance()
+
 #define WIDTH  64
 #define HEIGHT 32
 #define PIXEL  10
@@ -66,8 +68,8 @@ public:
     Display& operator=(const Display&) = delete;
 
     static Display& getInstance() {
-            static Display instance;
-            return instance;
+            static Display istn;
+            return istn;
         }
 
     bool initWindow(HINSTANCE hInstance, int nCmdShow);

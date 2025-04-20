@@ -140,7 +140,7 @@ void DrawChip8Screen(Graphics& graphics) {
 
     graphics.FillRectangle(&blackBrush, CORNER_OFFSET, CORNER_OFFSET, WIDTH * PIXEL, HEIGHT * PIXEL);
 
-    const auto& screen = Display::getInstance().getScreen();
+    const auto& screen = instance.getScreen();
     for (int i = 0; i < WIDTH * HEIGHT; ++i) {
         if (screen[i]) {
             int x = (i % WIDTH) * PIXEL + CORNER_OFFSET;
@@ -360,10 +360,10 @@ void DrawHeaders(Graphics& graphics) {
 void Render(Graphics& graphics) {
     DrawChip8Screen(graphics);
     DrawTitle(graphics);
-    DrawMemoryPanel(graphics, Display::getInstance().getMemory());
-    DrawStackPanel(graphics, Display::getInstance().getCpu());
-    DrawRegPanel(graphics, Display::getInstance().getCpu());
-    DrawSpecialRegPanel(graphics, Display::getInstance().getCpu());
+    DrawMemoryPanel(graphics, instance.getMemory());
+    DrawStackPanel(graphics, instance.getCpu());
+    DrawRegPanel(graphics, instance.getCpu());
+    DrawSpecialRegPanel(graphics, instance.getCpu());
     DrawMemScrollbar(graphics);
     DrawStackScrollbar(graphics);
     DrawHeaders(graphics);
@@ -383,67 +383,67 @@ void procKey(WPARAM wParam) {
     switch(wParam) 
         {
             case '1':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case '2':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case '3':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case '4':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'Q':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'W':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'E':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'R':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'A':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'S':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'D':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'F':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'Z':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
                 
             case 'X':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'C':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             case 'V':
-                Display::getInstance().getCpu()->setST(35);
+                instance.getCpu()->setST(35);
                 break;
 
             default:
@@ -508,30 +508,30 @@ void createButtons(HWND hwnd) {
         NULL
     );
 
-    Display::getInstance().setStartButton(startButton);
-    Display::getInstance().setPauseButton(pauseButton);
-    Display::getInstance().setResetButton(resetButton);
-    Display::getInstance().setLoadButton(loadButton);
+    instance.setStartButton(startButton);
+    instance.setPauseButton(pauseButton);
+    instance.setResetButton(resetButton);
+    instance.setLoadButton(loadButton);
 }
 
 void excludeButtons(HWND hwnd, HDC hdc) {
     RECT btnRectStart;
-        GetWindowRect(Display::getInstance().getStartButton(), &btnRectStart);
+        GetWindowRect(instance.getStartButton(), &btnRectStart);
         MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectStart, 2);
         ExcludeClipRect(hdc, btnRectStart.left, btnRectStart.top, btnRectStart.right, btnRectStart.bottom);
 
         RECT btnRectPause;
-        GetWindowRect(Display::getInstance().getPauseButton(), &btnRectPause);
+        GetWindowRect(instance.getPauseButton(), &btnRectPause);
         MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectPause, 2);
         ExcludeClipRect(hdc, btnRectPause.left, btnRectPause.top, btnRectPause.right, btnRectPause.bottom);
 
         RECT btnRectReset;
-        GetWindowRect(Display::getInstance().getResetButton(), &btnRectReset);
+        GetWindowRect(instance.getResetButton(), &btnRectReset);
         MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectReset, 2);
         ExcludeClipRect(hdc, btnRectReset.left, btnRectReset.top, btnRectReset.right, btnRectReset.bottom);
 
         RECT btnRectLoad;
-        GetWindowRect(Display::getInstance().getLoadButton(), &btnRectLoad);
+        GetWindowRect(instance.getLoadButton(), &btnRectLoad);
         MapWindowPoints(HWND_DESKTOP, hwnd, (LPPOINT)&btnRectLoad, 2);
         ExcludeClipRect(hdc, btnRectLoad.left, btnRectLoad.top, btnRectLoad.right, btnRectLoad.bottom);
 }
@@ -553,7 +553,7 @@ void showOpenFileDialog(HWND hwnd) {
 
     if (GetOpenFileName(&f) == TRUE)
     {
-        Display::getInstance().getMemory()->loadGame(buffer);
+        instance.getMemory()->loadGame(buffer);
     }
 }
 
@@ -613,24 +613,24 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         switch (LOWORD(wParam)){
             case IDC_START:
 
-                Display::getInstance().getCpu()->resume();
+                instance.getCpu()->resume();
 
-                EnableWindow(Display::getInstance().getStartButton(), false);
-                EnableWindow(Display::getInstance().getPauseButton(), true);
+                EnableWindow(instance.getStartButton(), false);
+                EnableWindow(instance.getPauseButton(), true);
                 break;
 
             case IDC_PAUSE:
                 
-                Display::getInstance().getCpu()->pause();
+                instance.getCpu()->pause();
                 
-                EnableWindow(Display::getInstance().getStartButton(), true);
-                EnableWindow(Display::getInstance().getPauseButton(), false);
+                EnableWindow(instance.getStartButton(), true);
+                EnableWindow(instance.getPauseButton(), false);
                 break;
                 
             case IDC_RESET:
                 
-                Display::getInstance().getCpu()->reset();
-                Display::getInstance().clear();
+                instance.getCpu()->reset();
+                instance.clear();
 
                 break;
 
