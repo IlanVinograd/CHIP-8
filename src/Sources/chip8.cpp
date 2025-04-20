@@ -5,6 +5,7 @@ bool Chip8::initChip(HINSTANCE hInstance, int nCmdShow, const u8 font[FONT_SIZE]
     instance.setCPUPointer(&cpu);
 
     memory.loadFont(font);
+    memory.loadGame(L"IBM.ch8");
     
     if (!instance.initWindow(hInstance, nCmdShow)) return false;
 
