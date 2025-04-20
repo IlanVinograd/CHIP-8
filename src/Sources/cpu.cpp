@@ -102,9 +102,12 @@ u16 CPU::fetch() {
 }
 
 void CPU::decodeAndExecute(u16 &opcode) {
-    u8 op = (opcode & 0xF000) << 12, x = (opcode & 0x0F00) << 8,
-    y = (opcode & 0x00F0) << 4, n = (opcode & 0x000F),
-    nn = (opcode & 0x00FF), nnn = (opcode & 0x0FFF);
+    u8 op  = (opcode & 0xF000) >> 12;
+    u8 x   = (opcode & 0x0F00) >> 8;
+    u8 y   = (opcode & 0x00F0) >> 4;
+    u8 n   = (opcode & 0x000F);
+    u8 nn  = (opcode & 0x00FF);
+    u16 nnn = (opcode & 0x0FFF);
 
     switch (op) {
 
@@ -112,7 +115,7 @@ void CPU::decodeAndExecute(u16 &opcode) {
             if (x == 0x0) {
                 switch(nn) {
                     case 0xE0: 
-                        Display::getInstance().clear();
+                        Display::getInstance().clear(); // Clear Screan.
                         break;
 
                     case 0xEE:
@@ -129,7 +132,7 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0x1:
-
+            Display::getInstance().getCpu()->PC = nnn; // Jumping to nnn (PC = nnn).
             break;
 
         case 0x2:
@@ -149,12 +152,14 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0x6:
-
+            Display::getInstance().getCpu()->setReg(x, nn); // Set Vx = nn (6xnn instruction).
             break;
 
-        case 0x7:
-
+        case 0x7: {
+            u8 Vx = Display::getInstance().getCpu()->getReg(x);
+            Display::getInstance().getCpu()->setReg(x, Vx + nn); // Adds the value nn to the value of register Vx (7xnn instruction). 
             break;
+        }
 
         case 0x8:
 
@@ -165,7 +170,7 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
 
         case 0xA:
-
+            Display::getInstance().getCpu()->I = nnn; // The value of register I is set to nnn (Annn instruction).
             break;
 
         case 0xB:
@@ -176,7 +181,27 @@ void CPU::decodeAndExecute(u16 &opcode) {
 
             break;
 
-        case 0xD:
+        case 0xD:   {
+
+            u8 vx = Display::getInstance().getCpu()->getReg(x);
+            u8 vy = Display::getInstance().getCpu()->getReg(y);
+            
+            Display::getInstance().getCpu()->setReg(0xF, 0);
+            
+            for (int row = 0; row < n; row++) {
+                u8 spriteByte = Display::getInstance().getMemory()->read(I + row);
+                    
+                for (int col = 0; col < 8; col++) {
+                    u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
+            
+                    if (spritePixel) {
+                            bool erased = Display::getInstance().togglePixel((vx + col) % WIDTH, (vy + row) % HEIGHT);
+                        if (erased)
+                            Display::getInstance().getCpu()->setReg(0xF, 1);
+                    }
+                }
+            }
+        }
 
             break;
 
@@ -188,14 +213,23 @@ void CPU::decodeAndExecute(u16 &opcode) {
 
             break;
 
-        default: 
+        default:
+            throw "ERROR DEFAULT EXCEPTION";
             return;
     }
 }
 
 void CPU::FetchDecodeExecute() {
     u16 opcode = fetch();
-    //decodeAndExecute(opcode);
+    try {
+        decodeAndExecute(opcode);
+    } catch (const std::exception& e) {
+        MessageBoxA(NULL, e.what(), "Standard Exception", MB_ICONERROR | MB_OK);
+    } catch (const char* msg) {
+        MessageBoxA(NULL, msg, "Custom Error", MB_ICONERROR | MB_OK);
+    } catch (...) {
+        MessageBoxA(NULL, "Unknown exception occurred", "Unknown Error", MB_ICONERROR | MB_OK);
+    }
 }
 
 void CPU::reset() {
