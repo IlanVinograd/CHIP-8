@@ -18,6 +18,29 @@ The following GIFs demonstrate a few classic games running on this emulator:
 **Tetris:**
 ![Tetris](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/Game4.gif)
 
+## Keyboard Layout
+
+The emulator maps your keyboard to the original CHIP-8 hexadecimal keypad as follows:
+
+**CHIP-8 Keypad Layout:**
+
+| 1 | 2 | 3 | C |
+|---|---|---|---|
+| 4 | 5 | 6 | D |
+| 7 | 8 | 9 | E |
+| A | 0 | B | F |
+
+**Keyboard Mapping:**
+
+| 1 | 2 | 3 | 4 |
+|---|---|---|---|
+| Q | W | E | R |
+| A | S | D | F |
+| Z | X | C | V |
+
+
+
+
 ## How to Run
 
 ### Requirements
