@@ -139,21 +139,21 @@ void CPU::decodeAndExecute(u16 &opcode) {
             instance.getCpu()->PC = nnn; // Jumping to nnn (PC = nnn).
             break;
 
-        case 0x2:
+        case 0x2: // Call a subroutine (2nnn instruction).
             instance.getCpu()->push(instance.getCpu()->PC);
             instance.getCpu()->PC = nnn;
             break;
 
-        case 0x3:
-
+        case 0x3: // Skip next instruction if Vx == nn (3xnn instruction).
+            if(instance.getCpu()->getReg(x) == nn) instance.getCpu()->PC += 2; 
             break;
 
-        case 0x4:
-
+        case 0x4: // Skip next instruction if Vx != nn (4xnn instruction).
+            if(instance.getCpu()->getReg(x) != nn) instance.getCpu()->PC += 2; 
             break;
 
-        case 0x5:
-
+        case 0x5: // Skip next instruction if Vx = Vy (5xy0 instruction).
+            if(instance.getCpu()->getReg(x) == instance.getCpu()->getReg(y)) instance.getCpu()->PC += 2;
             break;
 
         case 0x6:
@@ -186,27 +186,31 @@ void CPU::decodeAndExecute(u16 &opcode) {
 
             break;
 
-        case 0xD:   {
-
-            u8 vx = instance.getCpu()->getReg(x);
-            u8 vy = instance.getCpu()->getReg(y);
+            case 0xD: { // Draw on screen.
+                u8 vx = instance.getCpu()->getReg(x);
+                u8 vy = instance.getCpu()->getReg(y);
             
-            instance.getCpu()->setReg(0xF, 0);
+                instance.getCpu()->setReg(0xF, 0);
             
-            for (int row = 0; row < n; row++) {
-                u8 spriteByte = instance.getMemory()->read(I + row);
-                    
-                for (int col = 0; col < 8; col++) {
-                    u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
+                for (int row = 0; row < n; row++) {
+                    if ((vy + row) >= HEIGHT) break;
             
-                    if (spritePixel) {
-                            bool erased = instance.togglePixel((vx + col) % WIDTH, (vy + row) % HEIGHT);
-                        if (erased)
-                            instance.getCpu()->setReg(0xF, 1);
+                    u8 spriteByte = instance.getMemory()->read(I + row);
+            
+                    for (int col = 0; col < 8; col++) {
+                        if ((vx + col) >= WIDTH) break;
+            
+                        u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
+            
+                        if (spritePixel) {
+                            bool erased = instance.togglePixel(vx + col, vy + row);
+                            if (erased)
+                                instance.getCpu()->setReg(0xF, 1);
+                        }
                     }
                 }
-            }
-        }
+                break;
+            }            
 
             break;
 
