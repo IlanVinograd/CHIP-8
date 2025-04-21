@@ -2,13 +2,21 @@
 
 A CHIP-8 emulator developed in modern C++ using WinAPI and GDI+. This project is designed for Windows systems and features a responsive graphical interface, interactive controls, and built-in debugging tools. Built from the ground up to serve both as a learning platform and a technical showcase of low-level programming.
 
----
-
 ## Game Previews
 
 The following GIFs demonstrate a few classic games running on this emulator:
 
----
+**RushHour:**
+![RushHour](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/Game1.gif)
+
+**Space Invaders:**
+![Space Invaders](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/Game2.gif)
+
+**Brix:**
+![Brix](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/Game3.gif)
+
+**Tetris:**
+![Tetris](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/Game4.gif)
 
 ## How to Run
 
@@ -22,6 +30,7 @@ The following GIFs demonstrate a few classic games running on this emulator:
 ### Running a Game
 
 To run a CHIP-8 ROM, click the **Load** button to select a `.ch8` file. Once loaded, click **Start** to begin execution:
+![Choose Game](https://github.com/IlanVinograd/CHIP-8/blob/main/Img/CG.gif)
 
 ### Build Instructions
 
@@ -43,8 +52,6 @@ To run a CHIP-8 ROM, click the **Load** button to select a `.ch8` file. Once loa
    make clean
    ```
 
----
-
 ## Documentation and References
 
 ### Architecture Overview
@@ -65,7 +72,9 @@ To run a CHIP-8 ROM, click the **Load** button to select a `.ch8` file. Once loa
 
 - [Cowgod's CHIP-8 Technical Reference](http://devernay.free.fr/hacks/chip8/C8TECH10.HTM)
 - [CHIP-8 on Wikipedia](https://en.wikipedia.org/wiki/CHIP-8)
-- Community CHIP-8 emulator projects (for testing and validation)
+- [CHIP-8 Instruction Set](https://johnearnest.github.io/Octo/docs/chip8ref.pdf)
+- [Guide to making a CHIP-8 emulator](https://tobiasvl.github.io/blog/write-a-chip-8-emulator/)
+- [Games For CHIP-8](https://github.com/mir3z/chip8-emu/tree/master/roms)
 
 ---
 
