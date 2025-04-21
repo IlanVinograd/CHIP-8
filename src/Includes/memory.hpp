@@ -22,6 +22,12 @@ public:
             return memory[address];
         return 0;
     }
+
+    u8 write(u16 address, u8 byte) {
+        if (address < 4096)
+            return memory[address] = byte;
+        return 0;
+    }
     
 private:
     u8 memory[4096] = { };

@@ -113,7 +113,7 @@ void CPU::decodeAndExecute(u16 &opcode) {
 
         case 0x0:
             if (x == 0x0) {
-                switch(nn) {
+                switch (nn) {
                     case 0xE0: 
                         instance.clear(); // Clear Screan.
                         break;
@@ -292,17 +292,100 @@ void CPU::decodeAndExecute(u16 &opcode) {
             break;
         }
 
-        case 0xE:
-            if(nn == 0x9E) {
-                
+        case 0xE: 
+            if(nn == 0x9E) { 
+                // if key with the value in Vx is pressed.
+                if(instance.isKeyPressed(instance.getCpu()->getReg(x))) 
+                    instance.getCpu()->PC += 2;
             } else if (nn == 0xA1) {
-
+                // if key with the value in Vx is not pressed
+                if(!instance.isKeyPressed(instance.getCpu()->getReg(x))) 
+                    instance.getCpu()->PC += 2;
             } else {
                 throw "ERROR Unrecognized Opcode On: Ex9E / ExA1";
             }
             break;
 
         case 0xF:
+            switch (nn) {
+                case 0x07:
+                    instance.getCpu()->setReg(x, instance.getCpu()->getDT());
+                    break;
+
+                case 0x0A: {
+                    for (int i = 0; i < 16; ++i) {
+                        if (instance.isKeyPressed(i)) {
+                            instance.getCpu()->setReg(x, i);
+                            return;
+                        }
+                    }
+                
+                    instance.getCpu()->PC -= 2;
+                    return;
+                }
+
+                case 0x15:
+                    instance.getCpu()->setDT(instance.getCpu()->getReg(x));
+                    break;
+
+                case 0x18:
+                    instance.getCpu()->setST(instance.getCpu()->getReg(x));
+                    break;
+
+                case 0x1E: {
+                    u16 Vx = instance.getCpu()->getReg(x);
+                    u16 I = instance.getCpu()->I;
+                    u16 result = I + Vx;
+                
+                    instance.getCpu()->I = result;
+                
+                    if (useAmigaOverflowMode)
+                        instance.getCpu()->setReg(0xF, result > 0x0FFF ? 1 : 0);
+                
+                    break;
+                }
+                
+                case 0x29: {
+                    u8 digit = instance.getCpu()->getReg(x) & 0x0F;
+                    instance.getCpu()->I = digit * 5;
+                    break;
+                }                
+                    
+                case 0x33: {
+                    u8 value = instance.getCpu()->getReg(x);
+                    u16 I = instance.getCpu()->I;
+                
+                    instance.getMemory()->write(I + 2, value % 10);
+                    value /= 10;
+                    instance.getMemory()->write(I + 1, value % 10);
+                    value /= 10;
+                    instance.getMemory()->write(I, value % 10);
+                
+                    break;
+                }
+
+                case 0x55: {
+                    u16 I = instance.getCpu()->I;
+                    for (int i = 0; i <= x; ++i)
+                        instance.getMemory()->write(I + i, instance.getCpu()->getReg(i));
+                
+                    if (useOriginalStoreLoadMode)
+                        instance.getCpu()->I += x + 1;
+                
+                    break;
+                }
+                
+                case 0x65: {
+                    u16 I = instance.getCpu()->I;
+                    for (int i = 0; i <= x; ++i)
+                        instance.getCpu()->setReg(i, instance.getMemory()->read(I + i));
+                
+                    if (useOriginalStoreLoadMode)
+                        instance.getCpu()->I += x + 1;
+                
+                    break;
+                }
+            }
 
             break;
 

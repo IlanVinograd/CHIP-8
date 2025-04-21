@@ -72,6 +72,8 @@ private:
 
     bool paused = true;
     bool useLegacyShiftMode = false;
+    bool useAmigaOverflowMode = true;
+    bool useOriginalStoreLoadMode = false;
 };
 
 #endif /* _CPU_H_ */
