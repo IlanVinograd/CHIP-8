@@ -53,7 +53,8 @@ void Render(Graphics& graphics);
 // Double buffering
 void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, HBITMAP memBitmap);
 
-void procKey(WPARAM wParam);
+void procKeyDown(WPARAM wParam);
+void procKeyUp(WPARAM wParam);
 
 void createButtons(HWND hwnd);
 void excludeButtons(HWND hwnd, HDC hdc);
@@ -102,6 +103,10 @@ public:
     void setResetButton(HWND button) { resetButton = button; };
     void setLoadButton(HWND button) { loadButton = button; };
 
+    void setKeyDown(u8 key);
+    void setKeyUp(u8 key);
+    bool isKeyPressed(u8 key);
+
 private:
     Display() {}
 
@@ -113,6 +118,8 @@ private:
 
     ULONG_PTR gdiplusToken;
     GdiplusStartupInput gdiplusStartupInput;
+
+    bool keyStates[16] = {};
 };
 
 #endif /* _DISPLAY_H_ */

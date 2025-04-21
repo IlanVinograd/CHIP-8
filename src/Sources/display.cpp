@@ -379,76 +379,62 @@ void EndDoubleBuffering(HDC hdc, PAINTSTRUCT& ps, HDC memDC, HBITMAP oldBitmap, 
     EndPaint(WindowFromDC(hdc), &ps);
 }
 
-void procKey(WPARAM wParam) {
-    switch(wParam) 
-        {
-            case '1':
-                instance.getCpu()->setST(35);
-                break;
+void Display::setKeyDown(u8 key) {
+    keyStates[key] = true;
+}
 
-            case '2':
-                instance.getCpu()->setST(35);
-                break;
+void Display::setKeyUp(u8 key) {
+    keyStates[key] = false;
+}
 
-            case '3':
-                instance.getCpu()->setST(35);
-                break;
+bool Display::isKeyPressed(u8 key) {
+    return keyStates[key];
+}
 
-            case '4':
-                instance.getCpu()->setST(35);
-                break;
+void procKeyDown(WPARAM wParam) {
+    switch (wParam) 
+    {
+        case '1': instance.setKeyDown(0x0); break;
+        case '2': instance.setKeyDown(0x1); break;
+        case '3': instance.setKeyDown(0x2); break;
+        case '4': instance.setKeyDown(0x3); break;
+        case 'Q': instance.setKeyDown(0x4); break;
+        case 'W': instance.setKeyDown(0x5); break;
+        case 'E': instance.setKeyDown(0x6); break;
+        case 'R': instance.setKeyDown(0x7); break;
+        case 'A': instance.setKeyDown(0x8); break;
+        case 'S': instance.setKeyDown(0x9); break;
+        case 'D': instance.setKeyDown(0xA); break;
+        case 'F': instance.setKeyDown(0xB); break;
+        case 'Z': instance.setKeyDown(0xC); break;
+        case 'X': instance.setKeyDown(0xD); break;
+        case 'C': instance.setKeyDown(0xE); break;
+        case 'V': instance.setKeyDown(0xF); break;
+        default: break;
+    }
+}
 
-            case 'Q':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'W':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'E':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'R':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'A':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'S':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'D':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'F':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'Z':
-                instance.getCpu()->setST(35);
-                break;
-                
-            case 'X':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'C':
-                instance.getCpu()->setST(35);
-                break;
-
-            case 'V':
-                instance.getCpu()->setST(35);
-                break;
-
-            default:
-                break;
-        }
+void procKeyUp(WPARAM wParam) {
+    switch (wParam) 
+    {
+        case '1': instance.setKeyUp(0x0); break;
+        case '2': instance.setKeyUp(0x1); break;
+        case '3': instance.setKeyUp(0x2); break;
+        case '4': instance.setKeyUp(0x3); break;
+        case 'Q': instance.setKeyUp(0x4); break;
+        case 'W': instance.setKeyUp(0x5); break;
+        case 'E': instance.setKeyUp(0x6); break;
+        case 'R': instance.setKeyUp(0x7); break;
+        case 'A': instance.setKeyUp(0x8); break;
+        case 'S': instance.setKeyUp(0x9); break;
+        case 'D': instance.setKeyUp(0xA); break;
+        case 'F': instance.setKeyUp(0xB); break;
+        case 'Z': instance.setKeyUp(0xC); break;
+        case 'X': instance.setKeyUp(0xD); break;
+        case 'C': instance.setKeyUp(0xE); break;
+        case 'V': instance.setKeyUp(0xF); break;
+        default: break;
+    }
 }
 
 void createButtons(HWND hwnd) {
@@ -598,7 +584,13 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     case WM_KEYDOWN:
     {
-        procKey(wParam);
+        procKeyDown(wParam);
+        break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
+    }
+
+    case WM_KEYUP:
+    {
+        procKeyUp(wParam); 
         break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
     }
 

@@ -261,41 +261,45 @@ void CPU::decodeAndExecute(u16 &opcode) {
             }
             break;
 
-        case 0xC:
+        case 0xC: {
             u8 randomNumber = std::rand() % 256;
             instance.getCpu()->setReg(x, randomNumber & nn);
             break;
-
-            case 0xD: { // Draw on screen.
-                u8 vx = instance.getCpu()->getReg(x);
-                u8 vy = instance.getCpu()->getReg(y);
-            
-                instance.getCpu()->setReg(0xF, 0);
-            
-                for (int row = 0; row < n; row++) {
-                    if ((vy + row) >= HEIGHT) break;
-            
-                    u8 spriteByte = instance.getMemory()->read(I + row);
-            
-                    for (int col = 0; col < 8; col++) {
-                        if ((vx + col) >= WIDTH) break;
-            
-                        u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
-            
-                        if (spritePixel) {
-                            bool erased = instance.togglePixel(vx + col, vy + row);
-                            if (erased)
-                                instance.getCpu()->setReg(0xF, 1);
-                        }
+        }
+        case 0xD: { // Draw on screen.
+            u8 vx = instance.getCpu()->getReg(x);
+            u8 vy = instance.getCpu()->getReg(y);
+        
+            instance.getCpu()->setReg(0xF, 0);
+        
+            for (int row = 0; row < n; row++) {
+                if ((vy + row) >= HEIGHT) break;
+        
+                u8 spriteByte = instance.getMemory()->read(I + row);
+        
+                for (int col = 0; col < 8; col++) {
+                    if ((vx + col) >= WIDTH) break;
+        
+                    u8 spritePixel = (spriteByte >> (7 - col)) & 0x1;
+        
+                    if (spritePixel) {
+                        bool erased = instance.togglePixel(vx + col, vy + row);
+                        if (erased)
+                            instance.getCpu()->setReg(0xF, 1);
                     }
                 }
-                break;
-            }            
-
+            }
             break;
+        }
 
         case 0xE:
+            if(nn == 0x9E) {
+                
+            } else if (nn == 0xA1) {
 
+            } else {
+                throw "ERROR Unrecognized Opcode On: Ex9E / ExA1";
+            }
             break;
 
         case 0xF:
