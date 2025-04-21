@@ -71,6 +71,7 @@ private:
     void decDT() { if(DT > 0) DT--; };
 
     bool paused = true;
+    bool useLegacyShiftMode = false;
 };
 
 #endif /* _CPU_H_ */

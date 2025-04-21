@@ -167,23 +167,103 @@ void CPU::decodeAndExecute(u16 &opcode) {
         }
 
         case 0x8:
+            switch (n) {
+                case 0x0: {
+                    instance.getCpu()->setReg(x, instance.getCpu()->getReg(y));
+                    break;
+                }
 
+                case 0x1: {
+                    instance.getCpu()->setReg(x, instance.getCpu()->getReg(x) | instance.getCpu()->getReg(y));
+                    break;
+                }
+
+                case 0x2: {
+                    instance.getCpu()->setReg(x, instance.getCpu()->getReg(x) & instance.getCpu()->getReg(y));
+                    break;
+                }
+
+                case 0x3: {
+                    instance.getCpu()->setReg(x, instance.getCpu()->getReg(x) ^ instance.getCpu()->getReg(y));
+                    break;
+                }
+
+                case 0x4: {
+                    u16 sum = instance.getCpu()->getReg(x) + instance.getCpu()->getReg(y);
+                    instance.getCpu()->setReg(0xF, sum > 255 ? 1 : 0);
+                    instance.getCpu()->setReg(x, static_cast<u8>(sum));
+                    break;
+                }
+
+                case 0x5: {
+                    u8 Vx = instance.getCpu()->getReg(x);
+                    u8 Vy = instance.getCpu()->getReg(y);
+                    instance.getCpu()->setReg(0xF, Vx >= Vy ? 1 : 0);
+                    instance.getCpu()->setReg(x, Vx - Vy);
+                    break;
+                }
+
+                case 0x6: {
+                    if (useLegacyShiftMode) { // Not Implemented yet.
+
+                    } else {
+                        u8 Vx = instance.getCpu()->getReg(x);
+                        instance.getCpu()->setReg(0xF, Vx & 0x1);
+                        instance.getCpu()->setReg(x, Vx >> 1);
+                    }
+                    break;
+                }
+
+                case 0x7: {
+                    u8 Vx = instance.getCpu()->getReg(x);
+                    u8 Vy = instance.getCpu()->getReg(y);
+                    instance.getCpu()->setReg(0xF, Vy >= Vx ? 1 : 0);
+                    instance.getCpu()->setReg(x, Vy - Vx);
+                    break;
+                }
+
+                case 0xE: {
+                    if (useLegacyShiftMode) { // Not Implemented yet.
+
+                    } else {
+                        u8 Vx = instance.getCpu()->getReg(x);
+                        instance.getCpu()->setReg(0xF, (Vx >> 7) & 0x1);
+                        instance.getCpu()->setReg(x, Vx << 1);
+                    }
+                    break;
+                }
+
+                default: 
+                    throw "ERROR Unrecognized Opcode On: 8XYN Instructions.";
+                    break;
+            }
             break;
 
-        case 0x9:
-
+        case 0x9: {
+            if (n == 0) {
+                if (instance.getCpu()->getReg(x) != instance.getCpu()->getReg(y))
+                    instance.getCpu()->PC += 2;
+            } else {
+                throw "ERROR Unrecognized Opcode On: 9XYN (n != 0)";
+            }
             break;
+        }
 
         case 0xA:
             instance.getCpu()->I = nnn; // The value of register I is set to nnn (Annn instruction).
             break;
 
         case 0xB:
+            if (useLegacyShiftMode) { // Not Not Implemented yet.
 
+            } else {
+                instance.getCpu()->PC = nnn + instance.getCpu()->getReg(0x0);
+            }
             break;
 
         case 0xC:
-
+            u8 randomNumber = std::rand() % 256;
+            instance.getCpu()->setReg(x, randomNumber & nn);
             break;
 
             case 0xD: { // Draw on screen.
