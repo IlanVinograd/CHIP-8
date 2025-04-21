@@ -87,7 +87,7 @@ void CPU::chip8TimerLoop(CPU* cpu, HWND hwnd) {
             InvalidateRect(hwnd, NULL, TRUE);
         }
 
-        std::this_thread::sleep_for(std::chrono::microseconds(100000)); // <---- DONT FORGOT TO CHANGE BACK.
+        std::this_thread::sleep_for(std::chrono::microseconds(1)); // <---- DONT FORGOT TO CHANGE BACK.
     }
 }
 

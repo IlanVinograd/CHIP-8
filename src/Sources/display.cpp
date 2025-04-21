@@ -585,18 +585,19 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     case WM_KEYDOWN:
     {
         procKeyDown(wParam);
-        break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
+        return 0; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
     }
 
     case WM_KEYUP:
     {
         procKeyUp(wParam); 
-        break; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
+        return 0; // To disable "warning: this statement may fall through [-Wimplicit-fallthrough=]"
     }
 
     case WM_CREATE:
     {
         createButtons(hwnd);
+        SetFocus(hwnd);
         return 0;
     }
 
@@ -609,6 +610,8 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
                 EnableWindow(instance.getStartButton(), false);
                 EnableWindow(instance.getPauseButton(), true);
+
+                SetFocus(hwnd);
                 break;
 
             case IDC_PAUSE:
@@ -617,6 +620,8 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 
                 EnableWindow(instance.getStartButton(), true);
                 EnableWindow(instance.getPauseButton(), false);
+
+                SetFocus(hwnd);
                 break;
                 
             case IDC_RESET:
@@ -624,10 +629,13 @@ LRESULT CALLBACK WinProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 instance.getCpu()->reset();
                 instance.clear();
 
+                SetFocus(hwnd);
                 break;
 
             case IDC_LOAD:
                 showOpenFileDialog(hwnd);
+
+                SetFocus(hwnd);
                 break;
         }
 
