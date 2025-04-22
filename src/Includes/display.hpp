@@ -86,8 +86,16 @@ public:
     bool togglePixel(int x, int y);
     void clear();
 
+    void cleanupFont() {
+        if (customFont) {
+            DeleteObject(customFont);
+            customFont = nullptr;
+        }
+    }
+
     ~Display() {
         if (gdiplusToken != 0) {
+            instance.cleanupFont();
             GdiplusShutdown(gdiplusToken);
         }
     }
@@ -97,11 +105,13 @@ public:
     HWND getPauseButton() { return pauseButton; };
     HWND getResetButton() { return resetButton; };
     HWND getLoadButton() { return loadButton; };
+    HFONT getFont() {return customFont; };
 
     void setStartButton(HWND button) { startButton = button; };
     void setPauseButton(HWND button) { pauseButton = button; };
     void setResetButton(HWND button) { resetButton = button; };
     void setLoadButton(HWND button) { loadButton = button; };
+    void setFont(HFONT f) { customFont = f; };
 
     void setKeyDown(u8 key);
     void setKeyUp(u8 key);
@@ -114,6 +124,8 @@ private:
     CPU* cpu = nullptr;
 
     HWND hwnd = nullptr, startButton = nullptr, pauseButton = nullptr, resetButton = nullptr, loadButton = nullptr;
+    HFONT customFont = nullptr;
+
     std::array<bool, WIDTH * HEIGHT> screen;
 
     ULONG_PTR gdiplusToken;

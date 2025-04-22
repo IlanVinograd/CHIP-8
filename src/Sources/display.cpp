@@ -494,6 +494,26 @@ void createButtons(HWND hwnd) {
         NULL
     );
 
+    HFONT font = CreateFont(
+        18,
+        0, 0, 0,
+        FW_BOLD,
+        FALSE, FALSE, FALSE,
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        CLIP_DEFAULT_PRECIS,
+        CLEARTYPE_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Segoe UI"
+    );
+
+    instance.setFont(font);
+
+    SendMessage(startButton, WM_SETFONT, (WPARAM)instance.getFont(), MAKELPARAM(TRUE, 0));
+    SendMessage(pauseButton, WM_SETFONT, (WPARAM)instance.getFont(), MAKELPARAM(TRUE, 0));
+    SendMessage(resetButton, WM_SETFONT, (WPARAM)instance.getFont(), MAKELPARAM(TRUE, 0));
+    SendMessage(loadButton, WM_SETFONT, (WPARAM)instance.getFont(), MAKELPARAM(TRUE, 0));
+
     instance.setStartButton(startButton);
     instance.setPauseButton(pauseButton);
     instance.setResetButton(resetButton);
